@@ -83,6 +83,10 @@ class sfSessionStorage extends sfStorage
     $httpOnly = $this->options['session_cookie_httponly'];
     session_set_cookie_params($lifetime, $path, $domain, $secure, $httpOnly);
 
+    if(array_key_exists($sessionName, $_COOKIE)){
+        setcookie($sessionName, $_COOKIE[$sessionName], time() + $lifetime, $path, $domain, $secure, $httpOnly);
+    }
+
     if (null !== $this->options['session_cache_limiter'])
     {
       session_cache_limiter($this->options['session_cache_limiter']);
