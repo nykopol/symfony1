@@ -1,3 +1,8 @@
+Symfony1 is not maintained any more by SensioLabs. As i have many projects on it that i must maintain, i forked the 
+official repository here to correct my bugs. Hope it can help others peoples in my case.
+
+-------
+
 Symfony is a complete framework designed to optimize the development of web applications by way of several key features.
 For starters, it separates a web application's business rules, server logic, and presentation views.
 It contains numerous tools and classes aimed at shortening the development time of a complex web application.
