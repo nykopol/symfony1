@@ -91,6 +91,9 @@ EOF;
 	  }else{
 	     foreach($files as $file){
 		  $this->getFilesystem()->mkdirs(dirname($file).'/archive');
+		  if(file_exists(dirname($file).'/archive/'.basename($file).'.old')){
+		     $this->getFilesystem()->remove( dirname($file).'/archive/'.basename($file).'.old' );
+		  }
 		  $this->getFilesystem()->rename($file, dirname($file).'/archive/'.basename($file).'.old');
 	     }
 	  }
