@@ -23,6 +23,7 @@ class sfDoctrineCleanModelFilesTask extends sfDoctrineBaseTask
   protected function configure()
   {
     $this->addOptions(array(
+      new sfCommandOption('archive', null, sfCommandOption::PARAMETER_NONE, "Don't delete classes, but archive them in 'archive' folder"),
       new sfCommandOption('no-confirmation', null, sfCommandOption::PARAMETER_NONE, 'Do not ask for confirmation'),
     ));
 
@@ -56,7 +57,7 @@ EOF;
     // remove any models present in the filesystem but not in the yaml schema
     if ($modelsToRemove = array_diff($this->getFileModels($config['models_path']), array_keys($yamlSchema)))
     {
-      $deleteModelFiles->run($modelsToRemove, array('no-confirmation' => $options['no-confirmation']));
+      $deleteModelFiles->run($modelsToRemove, array('no-confirmation' => $options['no-confirmation'], 'archive' => $options['archive']));
       $changed = true;
     }
 

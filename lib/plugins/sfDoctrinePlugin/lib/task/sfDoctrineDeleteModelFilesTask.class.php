@@ -31,6 +31,7 @@ class sfDoctrineDeleteModelFilesTask extends sfDoctrineBaseTask
       new sfCommandOption('prefix', null, sfCommandOption::PARAMETER_REQUIRED | sfCommandOption::IS_ARRAY, 'Class prefix to remove'),
       new sfCommandOption('suffix', null, sfCommandOption::PARAMETER_REQUIRED | sfCommandOption::IS_ARRAY, 'Class suffix to remove'),
       new sfCommandOption('extension', null, sfCommandOption::PARAMETER_REQUIRED | sfCommandOption::IS_ARRAY, 'Filename extension to remove'),
+	new sfCommandOption('archive', null, sfCommandOption::PARAMETER_NONE, "Don't delete classes, but archive them in 'archive' folder"),
     ));
 
     $this->namespace = 'doctrine';
@@ -75,7 +76,7 @@ EOF;
       if ($files)
       {
         if (!$options['no-confirmation'] && !$this->askConfirmation(array_merge(
-          array('The following '.$modelName.' files will be deleted:', ''),
+          array('The following '.$modelName.' files will be '.($options['archive'] ? 'archived' : 'deleted').':', ''),
           array_map(create_function('$v', 'return \' - \'.sfDebug::shortenFilePath($v);'), $files),
           array('', 'Continue? (y/N)')
         ), 'QUESTION_LARGE', false))
@@ -85,7 +86,15 @@ EOF;
         }
 
         $this->logSection('doctrine', 'Deleting "'.$modelName.'" files');
-        $this->getFilesystem()->remove($files);
+	  if(!$options['archive']){
+	     $this->getFilesystem()->remove($files);
+	  }else{
+	     foreach($files as $file){
+		  $this->getFilesystem()->mkdirs(dirname($file).'/archive');
+		  $this->getFilesystem()->rename($file, dirname($file).'/archive/'.basename($file).'.old');
+	     }
+	  }
+        
 
         $total += count($files);
       }
