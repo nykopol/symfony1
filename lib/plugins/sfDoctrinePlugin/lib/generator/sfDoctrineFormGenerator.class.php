@@ -368,6 +368,7 @@ class sfDoctrineFormGenerator extends sfGenerator
       case 'boolean':
         $validatorSubclass = 'Boolean';
         break;
+      case 'varchar':
       case 'string':
     		if ($column->getDefinitionKey('email'))
     		{
@@ -443,6 +444,7 @@ class sfDoctrineFormGenerator extends sfGenerator
     {
       switch ($column->getDoctrineType())
       {
+        case 'varchar':
         case 'string':
           if ($column['length'])
           {
@@ -468,6 +470,10 @@ class sfDoctrineFormGenerator extends sfGenerator
     if (!$column->isNotNull() || $column->isPrimaryKey() || $column->hasDefinitionKey('default'))
     {
       $options[] = '\'required\' => false';
+    }
+    else
+    {
+	 $options[] = '\'required\' => true';
     }
 
     return count($options) ? sprintf('array(%s)', implode(', ', $options)) : '';
