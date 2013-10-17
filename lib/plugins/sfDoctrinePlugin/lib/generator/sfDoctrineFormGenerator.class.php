@@ -462,6 +462,13 @@ class sfDoctrineFormGenerator extends sfGenerator
         case 'enum':
           $options[] = '\'choices\' => '.$this->arrayExport($column['values']);
           break;
+	  case 'integer':
+          if ($rang = $column->getDefinitionKey('range'))
+          {
+            $options[] = sprintf('\'min\' => %s', min($column['range']));
+            $options[] = sprintf('\'max\' => %s', max($column['range']));
+          }
+	    break;
       }
     }
 
