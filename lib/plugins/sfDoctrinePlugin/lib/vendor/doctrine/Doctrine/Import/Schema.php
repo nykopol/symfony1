@@ -125,7 +125,9 @@ class Doctrine_Import_Schema
                                                           'extra',
                                                           'comment',
                                                           'charset',
-                                                          'collation'),
+                                                          'collation',
+                                                          'srid',
+                                                          'shape'),
 
                                    'relation'   =>  array('key',
                                                           'class',

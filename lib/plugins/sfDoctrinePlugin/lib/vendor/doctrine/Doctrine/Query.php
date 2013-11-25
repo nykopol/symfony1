@@ -491,8 +491,16 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
 
                 $parent = $this->_conn->getTable($owner);
                 $columnName = $parent->getColumnName($fieldName);
+                
                 $parentAlias = $this->getSqlTableAlias($componentAlias . '.' . $parent->getComponentName());
-                $sql[] = $this->_conn->quoteIdentifier($parentAlias) . '.' . $this->_conn->quoteIdentifier($columnName)
+                
+                $columnSql = $this->_conn->quoteIdentifier($parentAlias) . '.' . $this->_conn->quoteIdentifier($columnName);
+                $definition = $table->getColumnDefinition($fieldName);
+                if($definition['type'] == 'geometry'){
+                    $columnSql = 'ST_AsText('.$columnSql.')';
+                }
+                
+                $sql[] = $columnSql
                        . ' AS '
                        . $this->_conn->quoteIdentifier($tableAlias . '__' . $columnName);
             } else {
@@ -504,7 +512,14 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
                     $columnName = $table->getColumnName($fieldName);
                     $aliasSql = $this->_conn->quoteIdentifier($tableAlias . '__' . $columnName);
                 }
-                $sql[] = $this->_conn->quoteIdentifier($tableAlias) . '.' . $this->_conn->quoteIdentifier($columnName)
+                
+                $columnSql = $this->_conn->quoteIdentifier($tableAlias) . '.' . $this->_conn->quoteIdentifier($columnName);
+                $definition = $table->getColumnDefinition($fieldName);
+                if($definition['type'] == 'geometry'){
+                    $columnSql = 'ST_AsText('.$columnSql.')';
+                }
+                
+                $sql[] = $columnSql
                        . ' AS '
                        . $aliasSql;
             }

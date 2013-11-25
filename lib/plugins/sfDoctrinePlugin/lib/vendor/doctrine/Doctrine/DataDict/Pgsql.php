@@ -670,6 +670,31 @@ class Doctrine_DataDict_Pgsql extends Doctrine_DataDict
         $name = $this->conn->quoteIdentifier($name, true);
         return $name . ' ' . $this->getNativeDeclaration($field) . $default . $notnull;
     }
+    
+    /**
+     * Obtain DBMS specific SQL code portion needed to declare an geometry type
+     * field to be used in statements like CREATE TABLE.
+     *
+     * @param string $name name the field to be declared.
+     * @param array $field associative array with the name of the properties
+     *       of the field being declared as array indexes. Currently, the types
+     *       of supported field properties are as follows:
+     *
+     *       shape
+     *           String name of the shape saved in this field (POINT, LINE, 
+     *           POLYGON, ...)
+     *
+     *       srid
+     *           Integer value of the EPSG SIRD. Default value is SRID 4326 (WGS84)
+     * 
+     * @return string DBMS specific SQL code portion that should be used to
+     *       declare the specified field.
+     */
+    public function getgeometryDeclaration($name, $field){
+        $name = $this->conn->quoteIdentifier($name, true);
+        
+        return $name . ' ' . 'GEOMETRY('.$field['shape'].', '.(isset($field['srid']) ? $field['srid'] : 4326).')';
+    }
 
     /**
      * parseBoolean

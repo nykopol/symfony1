@@ -1841,6 +1841,10 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                         $a[$field] = $this->_data[$field];
                     }
                 break;
+                case 'geometry':
+                    $definition = $this->_table->getDefinitionOf($field);
+                    $a[$field] = new Doctrine_Expression( "ST_GeomFromText('".$this->_data[$field]."', ".($definition['srid'] ? $definition['srid'] : 4326).")" );
+                break;
                 default:
                     if ($this->_data[$field] instanceof Doctrine_Record) {
                         $a[$field] = $this->_data[$field]->getIncremented();
