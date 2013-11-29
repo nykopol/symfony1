@@ -71,10 +71,12 @@ function comment_as_conditional($condition, $content)
  * Escape carrier returns and single and double quotes for Javascript segments.
  */
 function escape_javascript($javascript = '')
-{
+{ 
   $javascript = preg_replace('/\r\n|\n|\r/', "\\n", $javascript);
+  $javascript = str_replace("\\", '\\\\', $javascript);
   $javascript = preg_replace('/(["\'])/', '\\\\\1', $javascript);
-
+  $javascript = str_replace("&#039;", '\\\'', $javascript);
+  $javascript = str_replace('&quot;', '\\"', $javascript);
   return $javascript;
 }
 
