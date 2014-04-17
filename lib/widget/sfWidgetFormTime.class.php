@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -29,6 +29,7 @@ class sfWidgetFormTime extends sfWidgetForm
    *  * hours:                  An array of hours for the hour select tag (optional)
    *  * minutes:                An array of minutes for the minute select tag (optional)
    *  * seconds:                An array of seconds for the second select tag (optional)
+   *  * UTC                     Use UTC instead of local time (local by default)
    *  * can_be_empty:           Whether the widget accept an empty value (true by default)
    *  * empty_values:           An array of values to use for the empty value (empty string for hours, minutes, and seconds by default)
    *
@@ -45,6 +46,7 @@ class sfWidgetFormTime extends sfWidgetForm
     $this->addOption('hours', parent::generateTwoCharsRange(0, 23));
     $this->addOption('minutes', parent::generateTwoCharsRange(0, 59));
     $this->addOption('seconds', parent::generateTwoCharsRange(0, 59));
+    $this->addOption('UTC', false);
 
     $this->addOption('can_be_empty', true);
     $this->addOption('empty_values', array('hour' => '', 'minute' => '', 'second' => ''));
@@ -64,6 +66,7 @@ class sfWidgetFormTime extends sfWidgetForm
    */
   public function render($name, $value = null, $attributes = array(), $errors = array())
   {
+    $date_function = $this->getOption('UTC') ? 'gmdate' : 'date';
     // convert value to an array
     $default = array('hour' => null, 'minute' => null, 'second' => null);
     if (is_array($value))
@@ -80,7 +83,7 @@ class sfWidgetFormTime extends sfWidgetForm
       else
       {
         // int cast required to get rid of leading zeros
-        $value = array('hour' => (int) date('H', $value), 'minute' => (int) date('i', $value), 'second' => (int) date('s', $value));
+        $value = array('hour' => (int) $date_function('H', $value), 'minute' => (int) $date_function('i', $value), 'second' => (int) $date_function('s', $value));
       }
     }
 
